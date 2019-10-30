@@ -1,0 +1,25 @@
+type Post @key(fields: "id") {
+  id: ID!
+  author: User
+  content: String # markdown
+  # tags: [String]
+  # reactions: [Reactions]
+}
+
+extend type User @key(fields: "id") {
+  id: ID! @external
+  posts: [Post]
+}
+
+# type Reactions {
+#   id: ID
+#   type: ReactionType
+#   count: Int
+#   nodes: [Reaction]
+# }
+
+# type Reaction {
+#   id: ID
+#   type: ReactionType
+#   user: User
+# }

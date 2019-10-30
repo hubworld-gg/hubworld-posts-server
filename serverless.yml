@@ -1,0 +1,32 @@
+service: hubworld-posts-server
+app: hubworld-posts-server
+org: lmuller18
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  package:
+    individually: true
+    exclude:
+      - node_modules
+
+plugins:
+  - serverless-webpack
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    port: 4002
+  webpack:
+    webpackConfig: 'webpack.config.js'
+    includeModules: true
+    packager: 'yarn'
+
+functions:
+  accounts:
+    handler: src/handler.handler
+    events:
+      - http:
+          path: api
+          method: post
+          cors: true
