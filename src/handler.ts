@@ -3,15 +3,19 @@ import { ApolloServer } from 'apollo-server-lambda';
 import { buildFederatedSchema } from '@apollo/federation';
 import typeDefs from './schema.graphql';
 
+export interface AppGraphQLContext {
+  userID: String;
+}
+
 const resolvers = {
   Post: {
     author(post: any) {
-      return { __typename: 'User', id: post.authorId };
+      return { __typename: 'User', id: post.authorID };
     }
   },
   User: {
     posts(user: any) {
-      return posts.filter(post => post.authorId === user.id);
+      return posts.filter(post => post.authorID === user.id);
     }
   }
 };
@@ -23,17 +27,17 @@ const server = new ApolloServer({
       resolvers
     }
   ]),
-  debug: process.env.APP_ENV === 'prod' ? false : true
-  // context: ({ event }) => {
-  //   const userID = event.headers ? event.headers['user-id'] : undefined;
-  //   return { userID };
-  // }
+  debug: process.env.APP_ENV === 'prod' ? false : true,
+  context: ({ event }): AppGraphQLContext => {
+    const userID = event.headers ? event.headers['user-id'] : undefined;
+    return { userID };
+  }
 });
 
 const posts = [
   {
     id: '1001',
-    authorId: '1',
+    authorID: 'test-user',
     content: 'Hey thereeee'
   }
 ];
