@@ -26,8 +26,8 @@ export type Post = {
 
 export type Reaction = {
    __typename?: 'Reaction',
-  type?: Maybe<ReactionType>,
-  user?: Maybe<User>,
+  type: ReactionType,
+  user: User,
 };
 
 export type Reactions = {
@@ -171,8 +171,8 @@ export type ReactionsResolvers<ContextType = any, ParentType extends ResolversPa
 }>;
 
 export type ReactionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Reaction'] = ResolversParentTypes['Reaction']> = ResolversObject<{
-  type?: Resolver<Maybe<ResolversTypes['ReactionType']>, ParentType, ContextType>,
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
+  type?: Resolver<ResolversTypes['ReactionType'], ParentType, ContextType>,
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{

@@ -2,7 +2,7 @@ import { APIGatewayProxyEvent, Context, Callback } from 'aws-lambda';
 import { ApolloServer } from 'apollo-server-lambda';
 import { buildFederatedSchema } from '@apollo/federation';
 
-import { Resolvers, ReactionType } from './schemaTypes';
+import { Resolvers, ReactionType, Reactions, Reaction } from './schemaTypes';
 import typeDefs from './schema.graphql';
 
 export interface AppGraphQLContext {
@@ -18,7 +18,7 @@ const resolvers: Resolvers = {
     reactions(post) {
       if (!post.reactions) return null;
       const reactionObj = post.reactions.reduce(
-        (acc: object, reaction: any) => {
+        (acc: Reactions, reaction: any) => {
           const type = reaction.type;
           if (acc[type]) {
             const r = acc[type];

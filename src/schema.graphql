@@ -18,8 +18,8 @@ type Reactions {
 }
 
 type Reaction {
-  type: ReactionType
-  user: User
+  type: ReactionType!
+  user: User!
 }
 
 enum ReactionType {
