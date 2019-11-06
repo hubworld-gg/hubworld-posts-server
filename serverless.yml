@@ -1,5 +1,5 @@
 service: hubworld-posts-server
-app: hubworld-posts-server
+app: hubworld
 org: lmuller18
 
 provider:

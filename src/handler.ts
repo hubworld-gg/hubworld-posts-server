@@ -71,6 +71,7 @@ const posts = [
     tags: ['gamer', 'reviews', 'tgif'],
     reactions: [
       { id: '999', type: 'LOVE', user: { id: 'comanderguy' } },
+      { id: '9993', type: 'LOVE', user: { id: 'test-user' } },
       { id: '493', type: 'GAMER', user: { id: 'test-user' } }
     ]
   }
