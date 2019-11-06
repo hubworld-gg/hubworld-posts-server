@@ -1,19 +1,22 @@
 import { APIGatewayProxyEvent, Context, Callback } from 'aws-lambda';
 import { ApolloServer } from 'apollo-server-lambda';
 import { buildFederatedSchema } from '@apollo/federation';
+
+import { Resolvers, ReactionType } from './schemaTypes';
 import typeDefs from './schema.graphql';
-// import { Post, Reactions, ReactionType } from './types';
 
 export interface AppGraphQLContext {
   userID: String;
 }
 
-const resolvers = {
+const resolvers: Resolvers = {
   Post: {
-    author(post: any) {
-      return { __typename: 'User', id: post.authorID };
+    author(post) {
+      if (!post.author) return null;
+      return { __typename: 'User', id: post.author.id };
     },
-    reactions(post: any) {
+    reactions(post) {
+      if (!post.reactions) return null;
       const reactionObj = post.reactions.reduce(
         (acc: object, reaction: any) => {
           const type = reaction.type;
@@ -43,7 +46,7 @@ const resolvers = {
     }
   },
   User: {
-    posts(user: any) {
+    posts(user) {
       return posts.filter(post => post.author.id === user.id);
     }
   }
@@ -70,9 +73,9 @@ const posts = [
     content: 'Hey thereeee',
     tags: ['gamer', 'reviews', 'tgif'],
     reactions: [
-      { id: '999', type: 'LOVE', user: { id: 'comanderguy' } },
-      { id: '9993', type: 'LOVE', user: { id: 'test-user' } },
-      { id: '493', type: 'GAMER', user: { id: 'test-user' } }
+      { type: ReactionType.Gamer, user: { id: 'comanderguy' } },
+      { type: ReactionType.Love, user: { id: 'test-user' } },
+      { type: ReactionType.Love, user: { id: 'test-user' } }
     ]
   }
 ];

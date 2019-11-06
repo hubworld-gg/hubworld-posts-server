@@ -12,14 +12,12 @@ extend type User @key(fields: "id") {
 }
 
 type Reactions {
-  id: ID
   type: ReactionType
   count: Int
   nodes: [Reaction]
 }
 
 type Reaction {
-  id: ID
   type: ReactionType
   user: User
 }

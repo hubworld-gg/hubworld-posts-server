@@ -26,14 +26,12 @@ export type Post = {
 
 export type Reaction = {
    __typename?: 'Reaction',
-  id?: Maybe<Scalars['ID']>,
   type?: Maybe<ReactionType>,
   user?: Maybe<User>,
 };
 
 export type Reactions = {
    __typename?: 'Reactions',
-  id?: Maybe<Scalars['ID']>,
   type?: Maybe<ReactionType>,
   count?: Maybe<Scalars['Int']>,
   nodes?: Maybe<Array<Maybe<Reaction>>>,
@@ -50,7 +48,8 @@ export type User = {
   posts?: Maybe<Array<Maybe<Post>>>,
 };
 
-
+export type WithIndex<TObject> = TObject & Record<string, any>;
+export type ResolversObject<TObject> = WithIndex<TObject>;
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
@@ -125,7 +124,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 
 /** Mapping between all available schema types and the resolvers types */
-export type ResolversTypes = {
+export type ResolversTypes = ResolversObject<{
   String: ResolverTypeWrapper<Scalars['String']>,
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
   Post: ResolverTypeWrapper<Post>,
@@ -135,10 +134,10 @@ export type ResolversTypes = {
   ReactionType: ReactionType,
   Int: ResolverTypeWrapper<Scalars['Int']>,
   Reaction: ResolverTypeWrapper<Reaction>,
-};
+}>;
 
 /** Mapping between all available schema types and the resolvers parents */
-export type ResolversParentTypes = {
+export type ResolversParentTypes = ResolversObject<{
   String: Scalars['String'],
   Boolean: Scalars['Boolean'],
   Post: Post,
@@ -148,42 +147,40 @@ export type ResolversParentTypes = {
   ReactionType: ReactionType,
   Int: Scalars['Int'],
   Reaction: Reaction,
-};
+}>;
 
-export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = {
+export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = ResolversObject<{
   __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Post']>, { __typename: 'Post' } & Pick<ParentType, 'id'>, ContextType>,
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
   author?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
   content?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   tags?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>,
   reactions?: Resolver<Maybe<Array<Maybe<ResolversTypes['Reactions']>>>, ParentType, ContextType>,
-};
+}>;
 
-export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
   __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & Pick<ParentType, 'id'>, ContextType>,
 
   posts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType>,
-};
+}>;
 
-export type ReactionsResolvers<ContextType = any, ParentType extends ResolversParentTypes['Reactions'] = ResolversParentTypes['Reactions']> = {
-  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>,
+export type ReactionsResolvers<ContextType = any, ParentType extends ResolversParentTypes['Reactions'] = ResolversParentTypes['Reactions']> = ResolversObject<{
   type?: Resolver<Maybe<ResolversTypes['ReactionType']>, ParentType, ContextType>,
   count?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
   nodes?: Resolver<Maybe<Array<Maybe<ResolversTypes['Reaction']>>>, ParentType, ContextType>,
-};
+}>;
 
-export type ReactionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Reaction'] = ResolversParentTypes['Reaction']> = {
-  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>,
+export type ReactionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Reaction'] = ResolversParentTypes['Reaction']> = ResolversObject<{
   type?: Resolver<Maybe<ResolversTypes['ReactionType']>, ParentType, ContextType>,
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
-};
+}>;
 
-export type Resolvers<ContextType = any> = {
+export type Resolvers<ContextType = any> = ResolversObject<{
   Post?: PostResolvers<ContextType>,
   User?: UserResolvers<ContextType>,
   Reactions?: ReactionsResolvers<ContextType>,
   Reaction?: ReactionResolvers<ContextType>,
-};
+}>;
 
 
 /**
