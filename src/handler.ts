@@ -2,7 +2,7 @@ import { APIGatewayProxyEvent, Context, Callback } from 'aws-lambda';
 import { ApolloServer } from 'apollo-server-lambda';
 import { buildFederatedSchema } from '@apollo/federation';
 
-import { Resolvers, ReactionType, Reactions, Reaction } from './schemaTypes';
+import { Resolvers, ReactionType, Reactions } from './schemaTypes';
 import typeDefs from './schema.graphql';
 
 export interface AppGraphQLContext {
