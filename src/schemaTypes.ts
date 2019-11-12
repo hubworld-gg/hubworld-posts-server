@@ -26,21 +26,16 @@ export type Post = {
 
 export type Reaction = {
    __typename?: 'Reaction',
-  type: ReactionType,
+  type: Scalars['String'],
   user: User,
 };
 
 export type Reactions = {
    __typename?: 'Reactions',
-  type?: Maybe<ReactionType>,
-  count?: Maybe<Scalars['Int']>,
-  nodes?: Maybe<Array<Maybe<Reaction>>>,
+  type: Scalars['String'],
+  count: Scalars['Int'],
+  nodes: Array<Maybe<Reaction>>,
 };
-
-export enum ReactionType {
-  Love = 'LOVE',
-  Gamer = 'GAMER'
-}
 
 export type User = {
    __typename?: 'User',
@@ -131,7 +126,6 @@ export type ResolversTypes = ResolversObject<{
   ID: ResolverTypeWrapper<Scalars['ID']>,
   User: ResolverTypeWrapper<User>,
   Reactions: ResolverTypeWrapper<Reactions>,
-  ReactionType: ReactionType,
   Int: ResolverTypeWrapper<Scalars['Int']>,
   Reaction: ResolverTypeWrapper<Reaction>,
 }>;
@@ -144,7 +138,6 @@ export type ResolversParentTypes = ResolversObject<{
   ID: Scalars['ID'],
   User: User,
   Reactions: Reactions,
-  ReactionType: ReactionType,
   Int: Scalars['Int'],
   Reaction: Reaction,
 }>;
@@ -165,13 +158,13 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 }>;
 
 export type ReactionsResolvers<ContextType = any, ParentType extends ResolversParentTypes['Reactions'] = ResolversParentTypes['Reactions']> = ResolversObject<{
-  type?: Resolver<Maybe<ResolversTypes['ReactionType']>, ParentType, ContextType>,
-  count?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
-  nodes?: Resolver<Maybe<Array<Maybe<ResolversTypes['Reaction']>>>, ParentType, ContextType>,
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
+  nodes?: Resolver<Array<Maybe<ResolversTypes['Reaction']>>, ParentType, ContextType>,
 }>;
 
 export type ReactionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Reaction'] = ResolversParentTypes['Reaction']> = ResolversObject<{
-  type?: Resolver<ResolversTypes['ReactionType'], ParentType, ContextType>,
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
 }>;
 

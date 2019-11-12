@@ -12,17 +12,12 @@ extend type User @key(fields: "id") {
 }
 
 type Reactions {
-  type: ReactionType
-  count: Int
-  nodes: [Reaction]
+  type: String!
+  count: Int!
+  nodes: [Reaction]!
 }
 
 type Reaction {
-  type: ReactionType!
+  type: String!
   user: User!
-}
-
-enum ReactionType {
-  LOVE
-  GAMER
 }

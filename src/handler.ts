@@ -2,7 +2,7 @@ import { APIGatewayProxyEvent, Context, Callback } from 'aws-lambda';
 import { ApolloServer } from 'apollo-server-lambda';
 import { buildFederatedSchema } from '@apollo/federation';
 
-import { Resolvers, ReactionType, Reactions, Reaction } from './schemaTypes';
+import { Resolvers, Reactions, Reaction } from './schemaTypes';
 import typeDefs from './schema.graphql';
 
 export interface AppGraphQLContext {
@@ -15,31 +15,32 @@ const resolvers: Resolvers = {
       return { __typename: 'User', id: post.author.id };
     },
     reactions(post) {
-      const reactionObj = postReactions
-        .filter(reaction => reaction.user.id === post.author.id)
-        .reduce((acc: Reactions, reaction: Reaction) => {
-          const type = reaction.type;
-          if (acc[type]) {
-            const r = acc[type];
-            r.count++;
-            r.nodes = [
-              ...r.nodes,
-              { ...reaction, user: { ...reaction.user, __typename: 'User' } }
-            ];
-          } else {
-            acc[type] = {
-              type,
+      return Object.values(
+        postReactions
+          .filter(reaction => reaction.user.id === post.author.id)
+          .reduce((acc, reaction: Reaction) => {
+            const { type } = reaction;
+            let reacts: Reactions = {
               count: 1,
+              type,
               nodes: [
                 { ...reaction, user: { ...reaction.user, __typename: 'User' } }
               ]
             };
-          }
-          return acc;
-        }, {});
 
-      const reactions = Object.keys(reactionObj).map(key => reactionObj[key]);
-      return reactions;
+            if (acc[type]) {
+              reacts = acc[type];
+              reacts.count++;
+              reacts.nodes = [
+                ...reacts.nodes,
+                { ...reaction, user: { ...reaction.user, __typename: 'User' } }
+              ];
+            }
+
+            acc[type] = reacts;
+            return acc;
+          }, {})
+      );
     }
   },
   User: {
@@ -73,9 +74,9 @@ const posts = [
 ];
 
 const postReactions: Reaction[] = [
-  { type: ReactionType.Gamer, user: { id: 'comanderguy' } },
-  { type: ReactionType.Love, user: { id: 'test-user' } },
-  { type: ReactionType.Love, user: { id: 'test-user' } }
+  { type: '🕹', user: { id: 'comanderguy' } },
+  { type: '❤', user: { id: 'test-user' } },
+  { type: '❤', user: { id: 'test-user' } }
 ];
 
 export const handler = (
