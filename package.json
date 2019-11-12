@@ -5,7 +5,9 @@
   "main": "handler.js",
   "scripts": {
     "start": "serverless offline",
-    "generate": "graphql-codegen --config codegen.yml"
+    "generate": "graphql-codegen --config codegen.yml",
+    "deploy": "serverless deploy",
+    "deploy-prod": "serverless --stage=production deploy"
   },
   "author": "",
   "license": "ISC",
