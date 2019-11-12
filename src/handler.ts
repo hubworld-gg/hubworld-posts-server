@@ -2,7 +2,7 @@ import { APIGatewayProxyEvent, Context, Callback } from 'aws-lambda';
 import { ApolloServer } from 'apollo-server-lambda';
 import { buildFederatedSchema } from '@apollo/federation';
 
-import { Resolvers, ReactionType, Reactions } from './schemaTypes';
+import { Resolvers, ReactionType, Reactions, Reaction } from './schemaTypes';
 import typeDefs from './schema.graphql';
 
 export interface AppGraphQLContext {
@@ -12,13 +12,12 @@ export interface AppGraphQLContext {
 const resolvers: Resolvers = {
   Post: {
     author(post) {
-      if (!post.author) return null;
       return { __typename: 'User', id: post.author.id };
     },
     reactions(post) {
-      if (!post.reactions) return null;
-      const reactionObj = post.reactions.reduce(
-        (acc: Reactions, reaction: any) => {
+      const reactionObj = postReactions
+        .filter(reaction => reaction.user.id === post.author.id)
+        .reduce((acc: Reactions, reaction: Reaction) => {
           const type = reaction.type;
           if (acc[type]) {
             const r = acc[type];
@@ -37,9 +36,7 @@ const resolvers: Resolvers = {
             };
           }
           return acc;
-        },
-        {}
-      );
+        }, {});
 
       const reactions = Object.keys(reactionObj).map(key => reactionObj[key]);
       return reactions;
@@ -61,7 +58,7 @@ const server = new ApolloServer({
   ]),
   debug: process.env.APP_ENV === 'prod' ? false : true,
   context: ({ event }): AppGraphQLContext => {
-    const userID = event.headers ? event.headers['user-id'] : undefined;
+    const userID = event.headers?.['user-id'];
     return { userID };
   }
 });
@@ -71,13 +68,14 @@ const posts = [
     id: '1001',
     author: { id: 'test-user' },
     content: 'Hey thereeee',
-    tags: ['gamer', 'reviews', 'tgif'],
-    reactions: [
-      { type: ReactionType.Gamer, user: { id: 'comanderguy' } },
-      { type: ReactionType.Love, user: { id: 'test-user' } },
-      { type: ReactionType.Love, user: { id: 'test-user' } }
-    ]
+    tags: ['gamer', 'reviews', 'tgif']
   }
+];
+
+const postReactions: Reaction[] = [
+  { type: ReactionType.Gamer, user: { id: 'comanderguy' } },
+  { type: ReactionType.Love, user: { id: 'test-user' } },
+  { type: ReactionType.Love, user: { id: 'test-user' } }
 ];
 
 export const handler = (

@@ -18,7 +18,7 @@ export type Scalars = {
 export type Post = {
    __typename?: 'Post',
   id: Scalars['ID'],
-  author?: Maybe<User>,
+  author: User,
   content?: Maybe<Scalars['String']>,
   tags?: Maybe<Array<Maybe<Scalars['String']>>>,
   reactions?: Maybe<Array<Maybe<Reactions>>>,
@@ -152,7 +152,7 @@ export type ResolversParentTypes = ResolversObject<{
 export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = ResolversObject<{
   __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Post']>, { __typename: 'Post' } & Pick<ParentType, 'id'>, ContextType>,
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
-  author?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
+  author?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
   content?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   tags?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>,
   reactions?: Resolver<Maybe<Array<Maybe<ResolversTypes['Reactions']>>>, ParentType, ContextType>,

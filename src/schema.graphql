@@ -1,6 +1,6 @@
 type Post @key(fields: "id") {
   id: ID!
-  author: User
+  author: User!
   content: String # markdown
   tags: [String]
   reactions: [Reactions]
