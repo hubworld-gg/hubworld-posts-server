@@ -2,7 +2,7 @@ import { APIGatewayProxyEvent, Context, Callback } from 'aws-lambda';
 import { ApolloServer } from 'apollo-server-lambda';
 import { buildFederatedSchema } from '@apollo/federation';
 
-import { Resolvers, Reactions, Reaction } from './schemaTypes';
+import { Resolvers, Reaction, Post } from './schemaTypes';
 import typeDefs from './schema.graphql';
 
 export interface AppGraphQLContext {
@@ -12,40 +12,17 @@ export interface AppGraphQLContext {
 const resolvers: Resolvers = {
   Post: {
     author(post) {
-      return { __typename: 'User', id: post.author.id };
+      return { __typename: 'User', id: post.author.id, posts: [] };
     },
     reactions(post) {
-      return Object.values(
-        postReactions
-          .filter(reaction => reaction.user.id === post.author.id)
-          .reduce((acc, reaction: Reaction) => {
-            const { type } = reaction;
-            let reacts: Reactions = {
-              count: 1,
-              type,
-              nodes: [
-                { ...reaction, user: { ...reaction.user, __typename: 'User' } }
-              ]
-            };
-
-            if (acc[type]) {
-              reacts = acc[type];
-              reacts.count++;
-              reacts.nodes = [
-                ...reacts.nodes,
-                { ...reaction, user: { ...reaction.user, __typename: 'User' } }
-              ];
-            }
-
-            acc[type] = reacts;
-            return acc;
-          }, {})
+      return postReactions.filter(
+        reaction => reaction.user.id === post.author.id
       );
     }
   },
   User: {
     posts(user) {
-      return posts.filter(post => post.author.id === user.id);
+      return posts.filter((post: Post) => post.author.id === user.id);
     }
   }
 };
@@ -64,7 +41,7 @@ const server = new ApolloServer({
   }
 });
 
-const posts = [
+const posts: any = [
   {
     id: '1001',
     author: { id: 'test-user' },
@@ -74,9 +51,9 @@ const posts = [
 ];
 
 const postReactions: Reaction[] = [
-  { type: '🕹', user: { id: 'comanderguy' } },
-  { type: '❤', user: { id: 'test-user' } },
-  { type: '❤', user: { id: 'test-user' } }
+  { type: '🕹', user: { id: 'comanderguy', posts: [] } },
+  { type: '❤', user: { id: 'test-user', posts: [] } },
+  { type: '❤', user: { id: 'test-user', posts: [] } }
 ];
 
 export const handler = (

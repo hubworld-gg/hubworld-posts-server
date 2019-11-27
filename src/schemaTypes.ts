@@ -19,9 +19,9 @@ export type Post = {
    __typename?: 'Post',
   id: Scalars['ID'],
   author: User,
-  content?: Maybe<Scalars['String']>,
-  tags?: Maybe<Array<Maybe<Scalars['String']>>>,
-  reactions?: Maybe<Array<Maybe<Reactions>>>,
+  content: Scalars['String'],
+  tags: Array<Scalars['String']>,
+  reactions: Array<Reaction>,
 };
 
 export type Reaction = {
@@ -30,17 +30,10 @@ export type Reaction = {
   user: User,
 };
 
-export type Reactions = {
-   __typename?: 'Reactions',
-  type: Scalars['String'],
-  count: Scalars['Int'],
-  nodes: Array<Maybe<Reaction>>,
-};
-
 export type User = {
    __typename?: 'User',
   id: Scalars['ID'],
-  posts?: Maybe<Array<Maybe<Post>>>,
+  posts: Array<Post>,
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -125,8 +118,6 @@ export type ResolversTypes = ResolversObject<{
   Post: ResolverTypeWrapper<Post>,
   ID: ResolverTypeWrapper<Scalars['ID']>,
   User: ResolverTypeWrapper<User>,
-  Reactions: ResolverTypeWrapper<Reactions>,
-  Int: ResolverTypeWrapper<Scalars['Int']>,
   Reaction: ResolverTypeWrapper<Reaction>,
 }>;
 
@@ -137,8 +128,6 @@ export type ResolversParentTypes = ResolversObject<{
   Post: Post,
   ID: Scalars['ID'],
   User: User,
-  Reactions: Reactions,
-  Int: Scalars['Int'],
   Reaction: Reaction,
 }>;
 
@@ -146,21 +135,15 @@ export type PostResolvers<ContextType = any, ParentType extends ResolversParentT
   __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Post']>, { __typename: 'Post' } & Pick<ParentType, 'id'>, ContextType>,
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
   author?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
-  content?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
-  tags?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>,
-  reactions?: Resolver<Maybe<Array<Maybe<ResolversTypes['Reactions']>>>, ParentType, ContextType>,
+  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  tags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>,
+  reactions?: Resolver<Array<ResolversTypes['Reaction']>, ParentType, ContextType>,
 }>;
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
   __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & Pick<ParentType, 'id'>, ContextType>,
 
-  posts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType>,
-}>;
-
-export type ReactionsResolvers<ContextType = any, ParentType extends ResolversParentTypes['Reactions'] = ResolversParentTypes['Reactions']> = ResolversObject<{
-  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
-  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
-  nodes?: Resolver<Array<Maybe<ResolversTypes['Reaction']>>, ParentType, ContextType>,
+  posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>,
 }>;
 
 export type ReactionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Reaction'] = ResolversParentTypes['Reaction']> = ResolversObject<{
@@ -171,7 +154,6 @@ export type ReactionResolvers<ContextType = any, ParentType extends ResolversPar
 export type Resolvers<ContextType = any> = ResolversObject<{
   Post?: PostResolvers<ContextType>,
   User?: UserResolvers<ContextType>,
-  Reactions?: ReactionsResolvers<ContextType>,
   Reaction?: ReactionResolvers<ContextType>,
 }>;
 

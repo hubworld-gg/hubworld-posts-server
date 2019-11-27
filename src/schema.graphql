@@ -1,20 +1,14 @@
 type Post @key(fields: "id") {
   id: ID!
   author: User!
-  content: String # markdown
-  tags: [String]
-  reactions: [Reactions]
+  content: String! # markdown
+  tags: [String!]!
+  reactions: [Reaction!]!
 }
 
 extend type User @key(fields: "id") {
   id: ID! @external
-  posts: [Post]
-}
-
-type Reactions {
-  type: String!
-  count: Int!
-  nodes: [Reaction]!
+  posts: [Post!]!
 }
 
 type Reaction {
