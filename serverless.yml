@@ -23,7 +23,7 @@ custom:
     packager: 'yarn'
 
 functions:
-  accounts:
+  posts:
     handler: src/handler.handler
     events:
       - http:
