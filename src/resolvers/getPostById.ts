@@ -9,6 +9,7 @@ const getPostById = async (
   const post: Maybe<Post> = await promisify((callback: any) => {
     const params = {
       TableName: 'HubworldPosts',
+      IndexName: 'PostId',
       KeyConditionExpression: 'postId = :v1',
       ExpressionAttributeValues: {
         ':v1': args.id

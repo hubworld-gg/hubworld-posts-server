@@ -60,6 +60,13 @@ resources:
           - AttributeName: postId
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
+        GlobalSecondaryIndexes:
+          - IndexName: PostId
+            KeySchema:
+              - AttributeName: postId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
     ServiceRole:
       Type: 'AWS::IAM::Role'
       Properties:
