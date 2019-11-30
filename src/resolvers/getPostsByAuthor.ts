@@ -1,36 +1,22 @@
-import AWS from 'aws-sdk';
+import { promisify } from 'utils';
+import { Post, QueryPostsByAuthorArgs } from 'schemaTypes';
 
-import { Resolvers, Post, User } from './schemaTypes';
-import { promisify } from './utils';
-
-const docClient = new AWS.DynamoDB.DocumentClient();
-
-const resolvers: Resolvers = {
-  Post: {
-    author: (post, args) => getAuthor(post, args)
-  },
-  User: {
-    posts: (user, args) => getPosts(user, args)
-  }
-};
-
-const getAuthor = (post: Post, args: {}): User => {
-  return { __typename: 'User', id: post.author.id, posts: [] };
-};
-
-const getPosts = async (user: User, args: {}): Promise<Post[]> => {
+const getPostsByAuthor = async (
+  root: any,
+  args: QueryPostsByAuthorArgs,
+  context: AppGraphQLContext
+): Promise<Post[]> => {
   const posts: Post[] = await promisify((callback: any) => {
     const params = {
       TableName: 'HubworldPosts',
       KeyConditionExpression: 'authorId = :v1',
       ExpressionAttributeValues: {
-        ':v1': user.id
+        ':v1': args.id
       }
     };
-
-    docClient.query(params, callback);
+    context.docClient.query(params, callback);
   }).then((result: any) => {
-    const postResult: PostsDBType = result.Items ?? [];
+    const postResult: PostDBType[] = result.Items ?? [];
     const posts: Post[] = postResult.map(p => {
       const post: Post = {
         author: {
@@ -55,4 +41,4 @@ const getPosts = async (user: User, args: {}): Promise<Post[]> => {
   return posts;
 };
 
-export default resolvers;
+export default getPostsByAuthor;

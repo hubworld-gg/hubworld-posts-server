@@ -1,5 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql';
 export type Maybe<T> = T | null;
+export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string,
@@ -22,6 +23,22 @@ export type Post = {
   content: Scalars['String'],
   tags: Array<Scalars['String']>,
   reactions: Array<Reaction>,
+};
+
+export type Query = {
+   __typename?: 'Query',
+  postsByAuthor: Array<Post>,
+  postById?: Maybe<Post>,
+};
+
+
+export type QueryPostsByAuthorArgs = {
+  id: Scalars['ID']
+};
+
+
+export type QueryPostByIdArgs = {
+  id: Scalars['ID']
 };
 
 export type Reaction = {
@@ -113,22 +130,29 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
-  String: ResolverTypeWrapper<Scalars['String']>,
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
-  Post: ResolverTypeWrapper<Post>,
+  Query: ResolverTypeWrapper<{}>,
   ID: ResolverTypeWrapper<Scalars['ID']>,
+  Post: ResolverTypeWrapper<Post>,
   User: ResolverTypeWrapper<User>,
+  String: ResolverTypeWrapper<Scalars['String']>,
   Reaction: ResolverTypeWrapper<Reaction>,
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
-  String: Scalars['String'],
-  Boolean: Scalars['Boolean'],
-  Post: Post,
+  Query: {},
   ID: Scalars['ID'],
+  Post: Post,
   User: User,
+  String: Scalars['String'],
   Reaction: Reaction,
+  Boolean: Scalars['Boolean'],
+}>;
+
+export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+  postsByAuthor?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryPostsByAuthorArgs, 'id'>>,
+  postById?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryPostByIdArgs, 'id'>>,
 }>;
 
 export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = ResolversObject<{
@@ -152,6 +176,7 @@ export type ReactionResolvers<ContextType = any, ParentType extends ResolversPar
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
+  Query?: QueryResolvers<ContextType>,
   Post?: PostResolvers<ContextType>,
   User?: UserResolvers<ContextType>,
   Reaction?: ReactionResolvers<ContextType>,

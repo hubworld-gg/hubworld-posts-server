@@ -1,3 +1,8 @@
+extend type Query {
+  postsByAuthor(id: ID!): [Post!]!
+  postById(id: ID!): Post
+}
+
 type Post @key(fields: "id") {
   id: ID!
   author: User!

@@ -14,6 +14,7 @@ module.exports = {
   target: 'node',
   externals: [nodeExternals()],
   resolve: {
+    modules: ['./src', 'node_modules'],
     extensions: ['.ts', '.graphql']
   },
   module: {
