@@ -1,9 +1,13 @@
 import { Resolvers } from 'schemaTypes';
 
+// queries
 import getAuthor from './getAuthor';
 import getPostsByMe from './getPostsByMe';
 import getPostsByAuthor from './getPostsByAuthor';
 import getPostById from './getPostById';
+
+// mutations
+import createPost from './createPost';
 
 const resolvers: Resolvers = {
   Post: {
@@ -16,6 +20,9 @@ const resolvers: Resolvers = {
     postsByAuthor: (root, args, context) =>
       getPostsByAuthor(root, args, context),
     postById: (root, args, context) => getPostById(root, args, context)
+  },
+  Mutation: {
+    createPost: (root, args, context) => createPost(root, args, context)
   }
 };
 

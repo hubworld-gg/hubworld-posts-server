@@ -6,11 +6,12 @@ declare module '*.graphql' {
 }
 
 declare type PostDBType = {
-  reactions: { type: string; userId: string }[];
-  authorId: string;
   postId: string;
-  tags: AWS.DynamoDB.DocumentClient.StringSet;
+  authorId: string;
+  title: string;
   content: string;
+  tags: AWS.DynamoDB.DocumentClient.StringSet;
+  reactions: { type: string; userId: string }[];
 };
 
 declare type AppGraphQLContext = {

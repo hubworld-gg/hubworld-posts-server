@@ -5,6 +5,7 @@ extend type Query {
 
 type Post @key(fields: "id") {
   id: ID!
+  title: String!
   author: User!
   content: String! # markdown
   tags: [String!]!
@@ -19,4 +20,23 @@ extend type User @key(fields: "id") {
 type Reaction {
   type: String!
   user: User!
+}
+
+extend type Mutation {
+  createPost(input: CreatePostInput!): CreatePostPayload
+}
+
+input CreatePostInput {
+  post: PostInput!
+}
+
+input PostInput {
+  authorId: String!
+  title: String!
+  content: String!
+  tags: [String!]
+}
+
+type CreatePostPayload {
+  post: Post
 }

@@ -19,20 +19,22 @@ const getPostsByMe = async (
     const postResult: PostDBType[] = result.Items ?? [];
     const posts: Post[] = postResult.map(p => {
       const post: Post = {
+        id: p.postId,
         author: {
           id: p.authorId,
           posts: []
         },
-        id: p.postId,
-        reactions: p.reactions.map(r => ({
-          type: r.type,
-          user: {
-            id: r.userId,
-            posts: []
-          }
-        })),
-        tags: p.tags.values,
-        content: p.content
+        title: p.title,
+        content: p.content,
+        tags: p.tags?.values ?? [],
+        reactions:
+          p.reactions?.map(r => ({
+            type: r.type,
+            user: {
+              id: r.userId,
+              posts: []
+            }
+          })) ?? []
       };
       return post;
     });

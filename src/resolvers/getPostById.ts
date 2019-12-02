@@ -22,20 +22,22 @@ const getPostById = async (
     if (!postResult) return null;
 
     const post: Post = {
+      id: postResult.postId,
       author: {
         id: postResult.authorId,
         posts: []
       },
-      id: postResult.postId,
-      reactions: postResult.reactions.map(r => ({
-        type: r.type,
-        user: {
-          id: r.userId,
-          posts: []
-        }
-      })),
-      tags: postResult.tags.values,
-      content: postResult.content
+      title: postResult.title,
+      content: postResult.content,
+      tags: postResult.tags?.values ?? [],
+      reactions:
+        postResult.reactions?.map(r => ({
+          type: r.type,
+          user: {
+            id: r.userId,
+            posts: []
+          }
+        })) ?? []
     };
     return post;
   });

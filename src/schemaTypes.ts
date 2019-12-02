@@ -16,13 +16,40 @@ export type Scalars = {
 
 
 
+export type CreatePostInput = {
+  post: PostInput,
+};
+
+export type CreatePostPayload = {
+   __typename?: 'CreatePostPayload',
+  post?: Maybe<Post>,
+};
+
+export type Mutation = {
+   __typename?: 'Mutation',
+  createPost?: Maybe<CreatePostPayload>,
+};
+
+
+export type MutationCreatePostArgs = {
+  input: CreatePostInput
+};
+
 export type Post = {
    __typename?: 'Post',
   id: Scalars['ID'],
+  title: Scalars['String'],
   author: User,
   content: Scalars['String'],
   tags: Array<Scalars['String']>,
   reactions: Array<Reaction>,
+};
+
+export type PostInput = {
+  authorId: Scalars['String'],
+  title: Scalars['String'],
+  content: Scalars['String'],
+  tags?: Maybe<Array<Scalars['String']>>,
 };
 
 export type Query = {
@@ -133,9 +160,13 @@ export type ResolversTypes = ResolversObject<{
   Query: ResolverTypeWrapper<{}>,
   ID: ResolverTypeWrapper<Scalars['ID']>,
   Post: ResolverTypeWrapper<Post>,
-  User: ResolverTypeWrapper<User>,
   String: ResolverTypeWrapper<Scalars['String']>,
+  User: ResolverTypeWrapper<User>,
   Reaction: ResolverTypeWrapper<Reaction>,
+  Mutation: ResolverTypeWrapper<{}>,
+  CreatePostInput: CreatePostInput,
+  PostInput: PostInput,
+  CreatePostPayload: ResolverTypeWrapper<CreatePostPayload>,
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
 }>;
 
@@ -144,9 +175,13 @@ export type ResolversParentTypes = ResolversObject<{
   Query: {},
   ID: Scalars['ID'],
   Post: Post,
-  User: User,
   String: Scalars['String'],
+  User: User,
   Reaction: Reaction,
+  Mutation: {},
+  CreatePostInput: CreatePostInput,
+  PostInput: PostInput,
+  CreatePostPayload: CreatePostPayload,
   Boolean: Scalars['Boolean'],
 }>;
 
@@ -158,6 +193,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = ResolversObject<{
   __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Post']>, { __typename: 'Post' } & Pick<ParentType, 'id'>, ContextType>,
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   author?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   tags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>,
@@ -175,11 +211,21 @@ export type ReactionResolvers<ContextType = any, ParentType extends ResolversPar
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
 }>;
 
+export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  createPost?: Resolver<Maybe<ResolversTypes['CreatePostPayload']>, ParentType, ContextType, RequireFields<MutationCreatePostArgs, 'input'>>,
+}>;
+
+export type CreatePostPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreatePostPayload'] = ResolversParentTypes['CreatePostPayload']> = ResolversObject<{
+  post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType>,
+}>;
+
 export type Resolvers<ContextType = any> = ResolversObject<{
   Query?: QueryResolvers<ContextType>,
   Post?: PostResolvers<ContextType>,
   User?: UserResolvers<ContextType>,
   Reaction?: ReactionResolvers<ContextType>,
+  Mutation?: MutationResolvers<ContextType>,
+  CreatePostPayload?: CreatePostPayloadResolvers<ContextType>,
 }>;
 
 
