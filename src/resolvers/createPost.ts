@@ -17,7 +17,7 @@ const createPost = async (
     authorId: post.authorId,
     title: post.title,
     content: post.content,
-    tags: post.tags ?? []
+    tags: post.tags ?? null
   });
 
   const createdPost = await getPostById({}, { id: addPostRef.id }, context);
