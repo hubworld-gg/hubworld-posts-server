@@ -1,3 +1,5 @@
+import { Post } from 'schemaTypes';
+
 const generateHash = (len = 13) =>
   Math.floor(2147483648 * Math.random()).toString(36) +
   Math.abs(Math.floor(2147483648 * Math.random()) ^ (Date.now || +new Date())())
@@ -35,4 +37,27 @@ const formatTags = (tags: string[]) => {
   );
 };
 
-export { generateHash, slugify, formatTags };
+const firebaseDocToPost = (
+  doc: FirebaseFirestore.DocumentSnapshot,
+  data: FirebaseFirestore.DocumentData
+): Post => ({
+  id: doc.id,
+  author: {
+    id: data.authorId,
+    posts: []
+  },
+  title: data.title,
+  slug: data.slug,
+  content: data.content,
+  tags: data.tags,
+  reactions:
+    data.reactions?.map((r: any) => ({
+      type: r.type,
+      user: {
+        id: r.userId,
+        posts: []
+      }
+    })) ?? []
+});
+
+export { firebaseDocToPost, generateHash, slugify, formatTags };

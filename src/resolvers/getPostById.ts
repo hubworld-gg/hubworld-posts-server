@@ -1,4 +1,5 @@
 import { Post, QueryPostByIdArgs, Maybe } from 'schemaTypes';
+import { firebaseDocToPost } from 'utils';
 
 const getPostById = async (
   root: any,
@@ -20,25 +21,8 @@ const getPostById = async (
 
   if (!data) return null;
 
-  const post: Post = {
-    id: doc.id,
-    author: {
-      id: data.authorId,
-      posts: []
-    },
-    title: data.title,
-    slug: data.slug,
-    content: data.content,
-    tags: data.tags,
-    reactions:
-      data.reactions?.map((r: any) => ({
-        type: r.type,
-        user: {
-          id: r.userId,
-          posts: []
-        }
-      })) ?? []
-  };
+  const post = firebaseDocToPost(doc, data);
+
   return post;
 };
 
