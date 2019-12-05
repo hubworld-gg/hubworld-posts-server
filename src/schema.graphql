@@ -1,7 +1,8 @@
 extend type Query {
-  postsByAuthor(id: ID!): [Post!]!
+  postsByAuthor(id: ID!): [Post!]
   postById(id: ID!): Post
   postBySlug(slug: String!): Post
+  postsByTag(tag: String!): [Post!]
 }
 
 type Post @key(fields: "id") {
@@ -10,13 +11,13 @@ type Post @key(fields: "id") {
   title: String!
   author: User!
   content: String! # markdown
-  tags: [String!]!
-  reactions: [Reaction!]!
+  tags: [String!]
+  reactions: [Reaction!]
 }
 
 extend type User @key(fields: "id") {
   id: ID! @external
-  posts: [Post!]!
+  posts: [Post!]
 }
 
 type Reaction {

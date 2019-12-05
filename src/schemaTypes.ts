@@ -42,8 +42,8 @@ export type Post = {
   title: Scalars['String'],
   author: User,
   content: Scalars['String'],
-  tags: Array<Scalars['String']>,
-  reactions: Array<Reaction>,
+  tags?: Maybe<Array<Scalars['String']>>,
+  reactions?: Maybe<Array<Reaction>>,
 };
 
 export type PostInput = {
@@ -55,9 +55,10 @@ export type PostInput = {
 
 export type Query = {
    __typename?: 'Query',
-  postsByAuthor: Array<Post>,
+  postsByAuthor?: Maybe<Array<Post>>,
   postById?: Maybe<Post>,
   postBySlug?: Maybe<Post>,
+  postsByTag?: Maybe<Array<Post>>,
 };
 
 
@@ -75,6 +76,11 @@ export type QueryPostBySlugArgs = {
   slug: Scalars['String']
 };
 
+
+export type QueryPostsByTagArgs = {
+  tag: Scalars['String']
+};
+
 export type Reaction = {
    __typename?: 'Reaction',
   type: Scalars['String'],
@@ -84,7 +90,7 @@ export type Reaction = {
 export type User = {
    __typename?: 'User',
   id: Scalars['ID'],
-  posts: Array<Post>,
+  posts?: Maybe<Array<Post>>,
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -193,9 +199,10 @@ export type ResolversParentTypes = ResolversObject<{
 }>;
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  postsByAuthor?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryPostsByAuthorArgs, 'id'>>,
+  postsByAuthor?: Resolver<Maybe<Array<ResolversTypes['Post']>>, ParentType, ContextType, RequireFields<QueryPostsByAuthorArgs, 'id'>>,
   postById?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryPostByIdArgs, 'id'>>,
   postBySlug?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryPostBySlugArgs, 'slug'>>,
+  postsByTag?: Resolver<Maybe<Array<ResolversTypes['Post']>>, ParentType, ContextType, RequireFields<QueryPostsByTagArgs, 'tag'>>,
 }>;
 
 export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = ResolversObject<{
@@ -205,14 +212,14 @@ export type PostResolvers<ContextType = any, ParentType extends ResolversParentT
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   author?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
-  tags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>,
-  reactions?: Resolver<Array<ResolversTypes['Reaction']>, ParentType, ContextType>,
+  tags?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>,
+  reactions?: Resolver<Maybe<Array<ResolversTypes['Reaction']>>, ParentType, ContextType>,
 }>;
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
   __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & Pick<ParentType, 'id'>, ContextType>,
 
-  posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>,
+  posts?: Resolver<Maybe<Array<ResolversTypes['Post']>>, ParentType, ContextType>,
 }>;
 
 export type ReactionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Reaction'] = ResolversParentTypes['Reaction']> = ResolversObject<{

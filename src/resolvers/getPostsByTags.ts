@@ -1,17 +1,17 @@
-import { Maybe, User, Post } from 'schemaTypes';
+import { Maybe, Post, QueryPostsByTagArgs } from 'schemaTypes';
 import { firebaseDocToPost } from 'utils';
 
-const getPostsByMe = async (
-  user: User,
-  args: {},
+const getPostsByTags = async (
+  root: any,
+  args: QueryPostsByTagArgs,
   context: AppGraphQLContext
 ): Promise<Maybe<Post[]>> => {
   const { firestoreClient } = context;
-  const { id } = user;
+  const { tag } = args;
 
   const query = await firestoreClient
     .collection('posts')
-    .where('authorId', '==', id)
+    .where('tags', 'array-contains', tag)
     .get();
 
   if (query.empty) return null;
@@ -25,4 +25,4 @@ const getPostsByMe = async (
   return posts;
 };
 
-export default getPostsByMe;
+export default getPostsByTags;

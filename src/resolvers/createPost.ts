@@ -25,18 +25,7 @@ const createPost = async (
   if (!createdPost) return { post: null };
 
   const createPostPayload: CreatePostPayload = {
-    post: {
-      author: {
-        id: createdPost.author.id,
-        posts: []
-      },
-      id: createdPost.id,
-      title: createdPost.title,
-      slug: createdPost.slug,
-      content: createdPost.content,
-      reactions: createdPost.reactions,
-      tags: createdPost.tags
-    }
+    post: createdPost
   };
 
   return createPostPayload;

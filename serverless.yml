@@ -9,18 +9,6 @@ provider:
     individually: true
     exclude:
       - node_modules
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:BatchGetItem
-        - dynamodb:BatchWriteItem
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-      Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/HubworldPosts*'
 
 plugins:
   - serverless-webpack
@@ -43,57 +31,3 @@ functions:
           path: api
           method: post
           cors: true
-
-resources:
-  Resources:
-    HubworldPostsTable:
-      Type: 'AWS::DynamoDB::Table'
-      Properties:
-        TableName: 'HubworldPosts'
-        AttributeDefinitions:
-          - AttributeName: authorId
-            AttributeType: S
-          - AttributeName: postId
-            AttributeType: S
-        KeySchema:
-          - AttributeName: authorId
-            KeyType: HASH
-          - AttributeName: postId
-            KeyType: RANGE
-        BillingMode: PAY_PER_REQUEST
-        GlobalSecondaryIndexes:
-          - IndexName: PostId
-            KeySchema:
-              - AttributeName: postId
-                KeyType: HASH
-            Projection:
-              ProjectionType: ALL
-    ServiceRole:
-      Type: 'AWS::IAM::Role'
-      Properties:
-        RoleName: 'HubworldPostsDynamoRole'
-        AssumeRolePolicyDocument:
-          Version: '2012-10-17'
-          Statement:
-            - Effect: 'Allow'
-              Principal:
-                Service:
-                  - 'lambda.amazonaws.com'
-              Action:
-                - 'sts:AssumeRole'
-        Policies:
-          - PolicyName: 'Dynamo-ServiceRole-Policy'
-            PolicyDocument:
-              Version: '2012-10-17'
-              Statement:
-                - Effect: 'Allow'
-                  Action:
-                    - 'dynamodb:Query'
-                    - 'dynamodb:BatchWriteItem'
-                    - 'dynamodb:GetItem'
-                    - 'dynamodb:DeleteItem'
-                    - 'dynamodb:PutItem'
-                    - 'dynamodb:Scan'
-                    - 'dynamodb:UpdateItem'
-                  Resource:
-                    - 'arn:aws:dynamodb:us-east-1:*:table/HubworldPosts*'

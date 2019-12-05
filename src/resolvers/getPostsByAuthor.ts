@@ -1,11 +1,11 @@
-import { Post, QueryPostsByAuthorArgs } from 'schemaTypes';
+import { Maybe, Post, QueryPostsByAuthorArgs } from 'schemaTypes';
 import { firebaseDocToPost } from 'utils';
 
 const getPostsByAuthor = async (
   root: any,
   args: QueryPostsByAuthorArgs,
   context: AppGraphQLContext
-): Promise<Post[]> => {
+): Promise<Maybe<Post[]>> => {
   const { firestoreClient } = context;
   const { id } = args;
 
@@ -14,7 +14,7 @@ const getPostsByAuthor = async (
     .where('authorId', '==', id)
     .get();
 
-  if (query.empty) return [];
+  if (query.empty) return null;
 
   const posts: Post[] = query.docs.map(doc => {
     const data = doc.data();

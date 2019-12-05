@@ -50,14 +50,13 @@ const firebaseDocToPost = (
   slug: data.slug,
   content: data.content,
   tags: data.tags,
-  reactions:
-    data.reactions?.map((r: any) => ({
-      type: r.type,
-      user: {
-        id: r.userId,
-        posts: []
-      }
-    })) ?? []
+  reactions: data.reactions?.map((r: any) => ({
+    type: r.type,
+    user: {
+      id: r.userId,
+      posts: []
+    }
+  }))
 });
 
 export { firebaseDocToPost, generateHash, slugify, formatTags };
