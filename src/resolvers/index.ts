@@ -5,6 +5,7 @@ import getAuthor from './getAuthor';
 import getPostsByMe from './getPostsByMe';
 import getPostsByAuthor from './getPostsByAuthor';
 import getPostById from './getPostById';
+import getPostBySlug from './getPostBySlug';
 
 // mutations
 import createPost from './createPost';
@@ -19,7 +20,8 @@ const resolvers: Resolvers = {
   Query: {
     postsByAuthor: (root, args, context) =>
       getPostsByAuthor(root, args, context),
-    postById: (root, args, context) => getPostById(root, args, context)
+    postById: (root, args, context) => getPostById(root, args, context),
+    postBySlug: (root, args, context) => getPostBySlug(root, args, context)
   },
   Mutation: {
     createPost: (root, args, context) => createPost(root, args, context)

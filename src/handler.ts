@@ -1,10 +1,10 @@
-import AWS from 'aws-sdk';
 import { APIGatewayProxyEvent, Context, Callback } from 'aws-lambda';
 import { ApolloServer } from 'apollo-server-lambda';
 import { buildFederatedSchema } from '@apollo/federation';
 
-import resolvers from 'resolvers';
+import admin from 'firebase-admin';
 
+import resolvers from 'resolvers';
 import typeDefs from 'schema.graphql';
 
 const server = new ApolloServer({
@@ -17,8 +17,18 @@ const server = new ApolloServer({
   debug: process.env.APP_ENV === 'prod' ? false : true,
   context: ({ event }): AppGraphQLContext => {
     const userID = event.headers?.['user-id'];
-    const docClient = new AWS.DynamoDB.DocumentClient();
-    return { userID, docClient };
+    if (!admin.apps.length) {
+      var serviceAccount = require('./firebase.json');
+      admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+        databaseURL: process.env.FIREBASE_DATABASE_URL
+      });
+    }
+    const firestoreClient = admin.firestore();
+    return {
+      userID,
+      firestoreClient
+    };
   }
 });
 

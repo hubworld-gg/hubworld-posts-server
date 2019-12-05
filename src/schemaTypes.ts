@@ -38,6 +38,7 @@ export type MutationCreatePostArgs = {
 export type Post = {
    __typename?: 'Post',
   id: Scalars['ID'],
+  slug: Scalars['String'],
   title: Scalars['String'],
   author: User,
   content: Scalars['String'],
@@ -56,6 +57,7 @@ export type Query = {
    __typename?: 'Query',
   postsByAuthor: Array<Post>,
   postById?: Maybe<Post>,
+  postBySlug?: Maybe<Post>,
 };
 
 
@@ -66,6 +68,11 @@ export type QueryPostsByAuthorArgs = {
 
 export type QueryPostByIdArgs = {
   id: Scalars['ID']
+};
+
+
+export type QueryPostBySlugArgs = {
+  slug: Scalars['String']
 };
 
 export type Reaction = {
@@ -188,11 +195,13 @@ export type ResolversParentTypes = ResolversObject<{
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   postsByAuthor?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryPostsByAuthorArgs, 'id'>>,
   postById?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryPostByIdArgs, 'id'>>,
+  postBySlug?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryPostBySlugArgs, 'slug'>>,
 }>;
 
 export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = ResolversObject<{
   __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Post']>, { __typename: 'Post' } & Pick<ParentType, 'id'>, ContextType>,
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+  slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   author?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>,

@@ -1,24 +1,23 @@
-import { Post, QueryPostByIdArgs, Maybe } from 'schemaTypes';
+import { Post, QueryPostBySlugArgs, Maybe } from 'schemaTypes';
 
-const getPostById = async (
+const getPostBySlug = async (
   root: any,
-  args: QueryPostByIdArgs,
+  args: QueryPostBySlugArgs,
   context: AppGraphQLContext
 ): Promise<Maybe<Post>> => {
-  const { id } = args;
+  const { slug } = args;
 
   const { firestoreClient } = context;
 
-  const doc = await firestoreClient
+  const query = await firestoreClient
     .collection('posts')
-    .doc(id)
+    .where('slug', '==', slug)
     .get();
 
-  if (!doc.exists) return null;
+  if (query.empty) return null;
 
+  const doc = query.docs[0];
   const data = doc.data();
-
-  if (!data) return null;
 
   const post: Post = {
     id: doc.id,
@@ -42,4 +41,4 @@ const getPostById = async (
   return post;
 };
 
-export default getPostById;
+export default getPostBySlug;

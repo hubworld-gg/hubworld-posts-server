@@ -1,4 +1,3 @@
-import { promisify } from 'utils';
 import { Post, QueryPostsByAuthorArgs } from 'schemaTypes';
 
 const getPostsByAuthor = async (
@@ -6,40 +5,39 @@ const getPostsByAuthor = async (
   args: QueryPostsByAuthorArgs,
   context: AppGraphQLContext
 ): Promise<Post[]> => {
-  const posts: Post[] = await promisify((callback: any) => {
-    const params = {
-      TableName: 'HubworldPosts',
-      KeyConditionExpression: 'authorId = :v1',
-      ExpressionAttributeValues: {
-        ':v1': args.id
-      }
+  const { firestoreClient } = context;
+  const { id } = args;
+
+  const query = await firestoreClient
+    .collection('posts')
+    .where('authorId', '==', id)
+    .get();
+
+  if (query.empty) return [];
+
+  const posts: Post[] = query.docs.map(doc => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      author: {
+        id: data.authorId,
+        posts: []
+      },
+      title: data.title,
+      slug: data.slug,
+      content: data.content,
+      tags: data.tags,
+      reactions:
+        data.reactions?.map((r: any) => ({
+          type: r.type,
+          user: {
+            id: r.userId,
+            posts: []
+          }
+        })) ?? []
     };
-    context.docClient.query(params, callback);
-  }).then((result: any) => {
-    const postResult: PostDBType[] = result.Items ?? [];
-    const posts: Post[] = postResult.map(p => {
-      const post: Post = {
-        id: p.postId,
-        author: {
-          id: p.authorId,
-          posts: []
-        },
-        title: p.title,
-        content: p.content,
-        tags: p.tags?.values ?? [],
-        reactions:
-          p.reactions?.map(r => ({
-            type: r.type,
-            user: {
-              id: r.userId,
-              posts: []
-            }
-          })) ?? []
-      };
-      return post;
-    });
-    return posts;
   });
+
   return posts;
 };
 
