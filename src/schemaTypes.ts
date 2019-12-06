@@ -59,6 +59,7 @@ export type Query = {
   postById?: Maybe<Post>,
   postBySlug?: Maybe<Post>,
   postsByTag?: Maybe<Array<Post>>,
+  postsBySearch?: Maybe<Array<Post>>,
 };
 
 
@@ -79,6 +80,11 @@ export type QueryPostBySlugArgs = {
 
 export type QueryPostsByTagArgs = {
   tag: Scalars['String']
+};
+
+
+export type QueryPostsBySearchArgs = {
+  search: Scalars['String']
 };
 
 export type Reaction = {
@@ -203,6 +209,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   postById?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryPostByIdArgs, 'id'>>,
   postBySlug?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryPostBySlugArgs, 'slug'>>,
   postsByTag?: Resolver<Maybe<Array<ResolversTypes['Post']>>, ParentType, ContextType, RequireFields<QueryPostsByTagArgs, 'tag'>>,
+  postsBySearch?: Resolver<Maybe<Array<ResolversTypes['Post']>>, ParentType, ContextType, RequireFields<QueryPostsBySearchArgs, 'search'>>,
 }>;
 
 export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = ResolversObject<{

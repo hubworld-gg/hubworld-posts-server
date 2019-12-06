@@ -3,6 +3,7 @@ extend type Query {
   postById(id: ID!): Post
   postBySlug(slug: String!): Post
   postsByTag(tag: String!): [Post!]
+  postsBySearch(search: String!): [Post!]
 }
 
 type Post @key(fields: "id") {

@@ -25,16 +25,17 @@ const slugify = (str: string) => {
     .replace(/-+$/, ''); // Trim - from end of text
 };
 
-const formatTags = (tags: string[]) => {
+const attributeToSearchableText = (attribute: string) => {
   const a =
     'àáâäæãåāăąçćčđďèéêëēėęěğǵḧîïíīįìłḿñńǹňôöòóœøōõőṕŕřßśšşșťțûüùúūǘůűųẃẍÿýžźż·/_,:;';
   const b =
     'aaaaaaaaaacccddeeeeeeeegghiiiiiilmnnnnoooooooooprrsssssttuuuuuuuuuwxyyzzz------';
   const p = new RegExp(a.split('').join('|'), 'g');
 
-  return tags.map(
-    tag => tag.toString().replace(p, c => b.charAt(a.indexOf(c))) // Replace special characters
-  );
+  return attribute
+    .toString()
+    .toLowerCase()
+    .replace(p, c => b.charAt(a.indexOf(c)));
 };
 
 const firebaseDocToPost = (
@@ -43,8 +44,7 @@ const firebaseDocToPost = (
 ): Post => ({
   id: doc.id,
   author: {
-    id: data.authorId,
-    posts: []
+    id: data.authorId
   },
   title: data.title,
   slug: data.slug,
@@ -53,10 +53,29 @@ const firebaseDocToPost = (
   reactions: data.reactions?.map((r: any) => ({
     type: r.type,
     user: {
-      id: r.userId,
-      posts: []
+      id: r.userId
     }
   }))
 });
 
-export { firebaseDocToPost, generateHash, slugify, formatTags };
+const getStartsWithCodes = (
+  search: string
+): { startcode: string; endcode: string } => {
+  const strlength = search.length;
+  const strFrontCode = search.slice(0, strlength - 1);
+  const strEndCode = search.slice(strlength - 1, search.length);
+
+  const startcode = search;
+  const endcode =
+    strFrontCode + String.fromCharCode(strEndCode.charCodeAt(0) + 1);
+
+  return { startcode, endcode };
+};
+
+export {
+  firebaseDocToPost,
+  generateHash,
+  slugify,
+  attributeToSearchableText,
+  getStartsWithCodes
+};

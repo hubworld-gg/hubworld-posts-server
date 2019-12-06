@@ -2,14 +2,15 @@ import { Resolvers } from 'schemaTypes';
 
 // queries
 import getAuthor from './getAuthor';
-import getPostsByMe from './getPostsByMe';
-import getPostsByAuthor from './getPostsByAuthor';
 import getPostById from './getPostById';
+import getPostsByMe from './getPostsByMe';
 import getPostBySlug from './getPostBySlug';
+import getPostsByTags from './getPostsByTags';
+import getPostsByAuthor from './getPostsByAuthor';
+import getPostsBySearch from './getPostsBySearch';
 
 // mutations
 import createPost from './createPost';
-import getPostsByTags from './getPostsByTags';
 
 const resolvers: Resolvers = {
   Post: {
@@ -23,7 +24,9 @@ const resolvers: Resolvers = {
       getPostsByAuthor(root, args, context),
     postById: (root, args, context) => getPostById(root, args, context),
     postBySlug: (root, args, context) => getPostBySlug(root, args, context),
-    postsByTag: (root, args, context) => getPostsByTags(root, args, context)
+    postsByTag: (root, args, context) => getPostsByTags(root, args, context),
+    postsBySearch: (root, args, context) =>
+      getPostsBySearch(root, args, context)
   },
   Mutation: {
     createPost: (root, args, context) => createPost(root, args, context)

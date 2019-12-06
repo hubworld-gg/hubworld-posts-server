@@ -1,5 +1,5 @@
 import { MutationCreatePostArgs, CreatePostPayload } from 'schemaTypes';
-import { slugify, generateHash, formatTags } from 'utils';
+import { slugify, generateHash, attributeToSearchableText } from 'utils';
 import getPostById from './getPostById';
 
 const createPost = async (
@@ -17,7 +17,9 @@ const createPost = async (
     authorId: post.authorId,
     title: post.title,
     content: post.content,
-    tags: post.tags ?? null
+    tags: post.tags ?? null,
+    _tags: post.tags?.map(t => attributeToSearchableText(t)) ?? null,
+    _title: attributeToSearchableText(post.title)
   });
 
   const createdPost = await getPostById({}, { id: addPostRef.id }, context);

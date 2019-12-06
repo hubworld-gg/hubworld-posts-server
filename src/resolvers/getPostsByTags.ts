@@ -11,7 +11,7 @@ const getPostsByTags = async (
 
   const query = await firestoreClient
     .collection('posts')
-    .where('tags', 'array-contains', tag)
+    .where('_tags', 'array-contains', tag.toLowerCase())
     .get();
 
   if (query.empty) return null;
