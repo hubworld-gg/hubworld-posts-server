@@ -8,13 +8,15 @@ const createPost = async (
   context: AppGraphQLContext
 ): Promise<CreatePostPayload> => {
   const { post } = args.input;
-  const { firestoreClient } = context;
+  const { firestoreClient, userID } = context;
+
+  if (!userID) return {};
 
   const slug = `${slugify(post.title)}-${generateHash()}`;
 
   const addPostRef = await firestoreClient.collection('posts').add({
     slug,
-    authorId: post.authorId,
+    authorId: userID,
     title: post.title,
     content: post.content,
     tags: post.tags ?? null,

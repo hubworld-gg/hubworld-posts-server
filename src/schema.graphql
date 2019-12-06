@@ -35,7 +35,6 @@ input CreatePostInput {
 }
 
 input PostInput {
-  authorId: String!
   title: String!
   content: String!
   tags: [String!]

@@ -47,7 +47,6 @@ export type Post = {
 };
 
 export type PostInput = {
-  authorId: Scalars['String'],
   title: Scalars['String'],
   content: Scalars['String'],
   tags?: Maybe<Array<Scalars['String']>>,
