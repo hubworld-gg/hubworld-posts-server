@@ -14,7 +14,7 @@
   "dependencies": {
     "@apollo/federation": "^0.10.2",
     "apollo-server-lambda": "^2.9.7",
-    "aws-lambda": "^0.1.2",
+    "aws-lambda": "^1.0.5",
     "firebase-admin": "^8.8.0",
     "graphql": "^14.5.8",
     "serverless-dotenv-plugin": "^2.1.1"
