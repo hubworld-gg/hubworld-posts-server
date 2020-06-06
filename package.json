@@ -13,7 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@apollo/federation": "^0.10.2",
-    "apollo-server-lambda": "^2.9.7",
+    "apollo-server-lambda": "^2.14.2",
     "aws-lambda": "^0.1.2",
     "firebase-admin": "^8.8.0",
     "graphql": "^14.5.8",
